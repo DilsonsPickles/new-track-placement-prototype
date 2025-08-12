@@ -55,9 +55,6 @@ export default function Toolbar() {
     });
   };
 
-  const handleClearSelection = () => {
-    dispatch({ type: 'CLEAR_SELECTION' });
-  };
 
   const handleReset = () => {
     dispatch({ type: 'RESET_TRACKS' });
@@ -94,14 +91,7 @@ export default function Toolbar() {
       </div>
 
       <div className="toolbar-section">
-        <h3>Selection</h3>
-        <button 
-          onClick={handleClearSelection}
-          disabled={!hasSelection}
-          className="btn-tertiary"
-        >
-          Clear Selection
-        </button>
+        <h3>Project</h3>
         <button onClick={handleReset} className="btn-tertiary">
           Reset All
         </button>

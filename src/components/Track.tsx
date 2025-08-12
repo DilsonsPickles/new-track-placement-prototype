@@ -8,7 +8,7 @@ interface TrackProps {
   index: number;
 }
 
-export default function Track({ track, index }: TrackProps) {
+export default function Track({ track }: TrackProps) {
   const { state, dispatch } = useTracks();
   
   const isSelected = state.selectedTracks.includes(track.id);
@@ -30,32 +30,60 @@ export default function Track({ track, index }: TrackProps) {
         className={`track-header ${isSelected ? 'selected' : ''}`}
         onClick={handleClick}
       >
-        <div className="track-controls">
-          <div className="track-number">{index + 1}</div>
-          <div className="track-type">{track.type}</div>
+        <div className="track-header-top">
+          <div className="track-icon">
+            {track.type === 'audio' ? '🎤' : track.type === 'label' ? '🏷️' : '🎵'}
+          </div>
+          <div className="track-name">{track.name}</div>
+          <div className="track-status">
+            {isSelected && <span className="status-badge selected-badge">S</span>}
+            {isFocused && <span className="status-badge focused-badge">F</span>}
+          </div>
         </div>
-        <div className="track-name">{track.name}</div>
-        <div className="track-status">
-          {isSelected && <span className="status-badge selected-badge">S</span>}
-          {isFocused && <span className="status-badge focused-badge">F</span>}
+        
+        <div className="track-controls-row">
+          <div className="volume-control">
+            <input 
+              type="range" 
+              min="0" 
+              max="100" 
+              value="75" 
+              className="volume-slider"
+              onClick={(e) => e.stopPropagation()}
+              onChange={() => {}} // Prevent React warning
+            />
+          </div>
+          <button className="track-btn mute-btn" onClick={(e) => e.stopPropagation()}>M</button>
+          <button className="track-btn solo-btn" onClick={(e) => e.stopPropagation()}>S</button>
+        </div>
+        
+        <div className="track-effects">
+          Effects
         </div>
       </div>
 
       {/* Track Canvas - Audio clips visualization */}
       <div className="track-canvas" onClick={handleClick}>
-        {track.clips.map(clip => (
-          <div
-            key={clip.id}
-            className="audio-clip"
-            style={{
-              left: `${clip.start * 10}px`, // 10px per second
-              width: `${clip.duration * 10}px`
-            }}
-          >
-            <span className="clip-name">{clip.name}</span>
-          </div>
-        ))}
-        {track.type === 'label' && (
+        {track.type === 'audio' || track.type === 'stereo' ? (
+          track.clips.map(clip => (
+            <div
+              key={clip.id}
+              className="audio-clip"
+              style={{
+                left: `${clip.start * 10}px`, // 10px per second
+                width: `${clip.duration * 10}px`
+              }}
+            >
+              <div className="track-label">{track.name}</div>
+              <div className="audio-channel">
+                <div className="waveform"></div>
+              </div>
+              <div className="audio-channel">
+                <div className="waveform"></div>
+              </div>
+            </div>
+          ))
+        ) : (
           <div className="label-indicators">
             <div className="label-marker" style={{ left: '50px' }}>Label 1</div>
             <div className="label-marker" style={{ left: '200px' }}>Label 2</div>

@@ -24,6 +24,7 @@ const initialState: TracksState = {
   ],
   selectedTracks: [],
   focusedTrack: 'track-1', // Always start with focus on first track
+  selectionAnchor: null,
   placementStrategy: 'focus-based'
 };
 
@@ -83,6 +84,7 @@ function tracksReducer(state: TracksState, action: TracksAction): TracksState {
           ...state,
           selectedTracks: rangeTrackIds,
           focusedTrack: syncFocus ? trackId : state.focusedTrack,
+          selectionAnchor: state.selectedTracks.length > 0 ? state.selectedTracks[0] : trackId,
           tracks: state.tracks.map(track => ({
             ...track,
             selected: rangeTrackIds.includes(track.id)
@@ -94,6 +96,7 @@ function tracksReducer(state: TracksState, action: TracksAction): TracksState {
           ...state,
           selectedTracks: [trackId],
           focusedTrack: syncFocus ? trackId : state.focusedTrack,
+          selectionAnchor: trackId, // Set anchor for future shift-selections
           tracks: state.tracks.map(track => ({
             ...track,
             selected: track.id === trackId
@@ -119,6 +122,7 @@ function tracksReducer(state: TracksState, action: TracksAction): TracksState {
           ...state,
           selectedTracks: newSelectedTracks,
           focusedTrack: newFocusedTrack,
+          selectionAnchor: state.selectionAnchor || (newSelectedTracks.length > 0 ? newSelectedTracks[0] : null),
           tracks: state.tracks.map(track => ({
             ...track,
             selected: newSelectedTracks.includes(track.id)
@@ -135,7 +139,7 @@ function tracksReducer(state: TracksState, action: TracksAction): TracksState {
     }
 
     case 'MOVE_FOCUS': {
-      const { direction } = action.payload;
+      const { direction, expandSelection = false } = action.payload;
       const currentIndex = state.focusedTrack ? 
         state.tracks.findIndex(t => t.id === state.focusedTrack) : -1;
       
@@ -148,9 +152,44 @@ function tracksReducer(state: TracksState, action: TracksAction): TracksState {
       
       const newFocusedTrack = state.tracks.length > 0 ? state.tracks[newIndex].id : null;
       
+      if (!expandSelection) {
+        // Normal focus movement - clear selection anchor
+        return {
+          ...state,
+          focusedTrack: newFocusedTrack,
+          selectionAnchor: null
+        };
+      }
+      
+      // Shift+Arrow: Expand selection
+      const anchor = state.selectionAnchor || state.focusedTrack;
+      if (!anchor || !newFocusedTrack) {
+        return {
+          ...state,
+          focusedTrack: newFocusedTrack
+        };
+      }
+      
+      const anchorIndex = state.tracks.findIndex(t => t.id === anchor);
+      const focusIndex = newIndex;
+      
+      // Create range selection from anchor to new focus
+      const startIndex = Math.min(anchorIndex, focusIndex);
+      const endIndex = Math.max(anchorIndex, focusIndex);
+      
+      const rangeTrackIds = state.tracks
+        .slice(startIndex, endIndex + 1)
+        .map(t => t.id);
+      
       return {
         ...state,
-        focusedTrack: newFocusedTrack
+        focusedTrack: newFocusedTrack,
+        selectionAnchor: anchor,
+        selectedTracks: rangeTrackIds,
+        tracks: state.tracks.map(track => ({
+          ...track,
+          selected: rangeTrackIds.includes(track.id)
+        }))
       };
     }
 
@@ -298,10 +337,34 @@ function tracksReducer(state: TracksState, action: TracksAction): TracksState {
       };
     }
 
+    case 'DELETE_TRACKS': {
+      const { trackIds } = action.payload;
+      const remainingTracks = state.tracks.filter(track => !trackIds.includes(track.id));
+      
+      // Clear selection of deleted tracks
+      const remainingSelectedTracks = state.selectedTracks.filter(id => !trackIds.includes(id));
+      
+      // If focused track was deleted, focus will be handled by ensureFocusState
+      const newFocusedTrack = trackIds.includes(state.focusedTrack || '') ? null : state.focusedTrack;
+      
+      return {
+        ...state,
+        tracks: remainingTracks,
+        selectedTracks: remainingSelectedTracks,
+        focusedTrack: newFocusedTrack,
+        selectionAnchor: remainingSelectedTracks.length > 0 ? (
+          remainingSelectedTracks.includes(state.selectionAnchor || '') ? 
+          state.selectionAnchor : 
+          remainingSelectedTracks[0]
+        ) : null
+      };
+    }
+
     case 'CLEAR_SELECTION': {
       return {
         ...state,
         selectedTracks: [],
+        selectionAnchor: null,
         tracks: state.tracks.map(track => ({
           ...track,
           selected: false

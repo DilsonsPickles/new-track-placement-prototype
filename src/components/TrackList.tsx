@@ -31,7 +31,7 @@ export default function TrackList() {
 
       <div className="track-list-info">
         <p>
-          <strong>Instructions:</strong> Click to select/focus • Ctrl/Cmd+Click for multi-select • Shift+Click for range select • Arrow keys move focus • Enter selects • Ctrl/Cmd+Enter multi-selects • Shift+Enter range selects
+          <strong>Instructions:</strong> Click to select/focus • Ctrl/Cmd+Click for multi-select • Shift+Click for range select • Arrow keys move focus • Shift+Arrow expands selection • Enter selects • Ctrl/Cmd+Enter multi-selects • Shift+Enter range selects • Delete key removes selected tracks
         </p>
         <p>
           Watch how new tracks are placed based on your current strategy: <strong>{state.placementStrategy}</strong>

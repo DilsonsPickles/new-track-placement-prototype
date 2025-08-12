@@ -34,29 +34,9 @@ body {
   flex-direction: column;
 }
 
-.app-header {
-  background: var(--track-bg);
-  border-bottom: 1px solid var(--border);
-  padding: 1rem 2rem;
-}
-
-.app-header h1 {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-  color: var(--accent);
-}
-
 .app-main {
   flex: 1;
   padding: 1rem;
-}
-
-.app-footer {
-  background: var(--track-bg);
-  border-top: 1px solid var(--border);
-  padding: 1rem 2rem;
-  font-size: 0.875rem;
-  color: #666;
 }
 
 /* Toolbar */
@@ -161,7 +141,7 @@ button:disabled {
   background: #f8f9fa;
   padding: 0.5rem;
   display: grid;
-  grid-template-columns: 300px 1fr;
+  grid-template-columns: 220px 1fr;
   border-bottom: 2px solid var(--border);
   font-weight: 600;
   font-size: 0.875rem;
@@ -181,9 +161,9 @@ button:disabled {
 /* Track Container */
 .track-container {
   display: grid;
-  grid-template-columns: 300px 1fr;
+  grid-template-columns: 220px 1fr;
   border-bottom: 1px solid var(--border);
-  min-height: 60px;
+  min-height: 80px;
   position: relative;
 }
 
@@ -193,66 +173,64 @@ button:disabled {
 
 .track-container.track-focused {
   border: 2px solid var(--warning);
-  border-radius: 4px;
+  border-radius: 6px;
   margin: 1px;
 }
 
 /* Track Header */
 .track-header {
-  padding: 0.75rem;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+  background: #f0f0f0;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  margin: 4px;
+  padding: 8px;
   cursor: pointer;
-  border-right: 1px solid var(--border);
   transition: background-color 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .track-header.selected {
   background: var(--track-selected);
-  border-left: 3px solid var(--accent);
+  border-color: var(--accent);
 }
 
-.track-controls {
+.track-header-top {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  min-width: 40px;
+  gap: 8px;
 }
 
-.track-number {
-  font-size: 0.75rem;
-  color: #666;
-  font-weight: 600;
-}
-
-.track-type {
-  font-size: 0.625rem;
-  text-transform: uppercase;
-  background: #e9ecef;
-  padding: 0.125rem 0.25rem;
-  border-radius: 2px;
-  color: #495057;
+.track-icon {
+  font-size: 16px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .track-name {
   flex: 1;
+  font-size: 13px;
   font-weight: 500;
+  color: #333;
 }
 
 .track-status {
   display: flex;
-  gap: 0.25rem;
+  gap: 4px;
 }
 
 .status-badge {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.625rem;
+  font-size: 10px;
   font-weight: 600;
   color: white;
 }
@@ -265,35 +243,153 @@ button:disabled {
   background: var(--warning);
 }
 
+.track-controls-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.volume-control {
+  flex: 1;
+}
+
+.volume-slider {
+  width: 100%;
+  height: 4px;
+  background: #ddd;
+  border-radius: 2px;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  background: #666;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: #666;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+.track-btn {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #999;
+  background: #f8f8f8;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.track-btn:hover {
+  background: #e8e8e8;
+}
+
+.track-btn:active {
+  background: #d8d8d8;
+}
+
+.track-effects {
+  font-size: 11px;
+  color: #666;
+  text-align: center;
+  background: #e8e8e8;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
 /* Track Canvas */
 .track-canvas {
-  padding: 0.75rem;
-  background: #fafafa;
+  background: 
+    linear-gradient(90deg, rgba(100, 120, 140, 0.1) 1px, transparent 1px),
+    linear-gradient(rgba(100, 120, 140, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-color: #3a3d4a;
   position: relative;
-  min-height: 60px;
-  border-left: 1px solid var(--border);
+  min-height: 80px;
+  overflow: hidden;
 }
 
 .audio-clip {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: var(--clip-bg);
-  border: 1px solid var(--clip-border);
-  border-radius: 4px;
-  height: 30px;
+  top: 0;
+  bottom: 0;
   display: flex;
-  align-items: center;
-  padding: 0 0.5rem;
-  font-size: 0.75rem;
-  color: white;
+  flex-direction: column;
   overflow: hidden;
 }
 
+/* Different colors for different tracks */
+.track-container:nth-child(2) .audio-clip {
+  background: rgba(100, 150, 255, 0.8);
+}
+
+.track-container:nth-child(3) .audio-clip {
+  background: rgba(150, 120, 255, 0.8);
+}
+
+.track-container:nth-child(4) .audio-clip {
+  background: rgba(255, 150, 100, 0.8);
+}
+
+.track-container:nth-child(5) .audio-clip {
+  background: rgba(255, 200, 100, 0.8);
+}
+
+.track-container:nth-child(6) .audio-clip {
+  background: rgba(120, 255, 150, 0.8);
+}
+
+.track-container:nth-child(n+7) .audio-clip {
+  background: rgba(200, 180, 255, 0.8);
+}
+
+.audio-channel {
+  flex: 1;
+  position: relative;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+}
+
+.audio-channel:last-child {
+  border-bottom: none;
+}
+
+.track-label {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  font-size: 10px;
+  color: rgba(0, 0, 0, 0.7);
+  font-weight: 600;
+  z-index: 2;
+}
+
+.waveform {
+  width: 100%;
+  height: 60%;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 40"><path d="M0,20 Q10,5 20,20 T40,20 Q50,35 60,20 T80,20 Q90,8 100,20 T120,20 Q130,32 140,20 T160,20 Q170,12 180,20 T200,20" fill="none" stroke="black" stroke-width="1"/></svg>') repeat-x;
+  background-size: 200px 100%;
+  opacity: 0.8;
+}
+
 .clip-name {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  display: none;
 }
 
 .label-indicators {
