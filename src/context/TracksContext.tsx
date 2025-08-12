@@ -11,7 +11,7 @@ const initialState: TracksState = {
       id: 'track-1',
       name: 'Audio Track 1',
       type: 'audio',
-      selected: false,
+      selected: true,
       clips: [{ id: 'clip-1', name: 'Recording 1', start: 0, duration: 30 }]
     },
     {
@@ -22,9 +22,9 @@ const initialState: TracksState = {
       clips: [{ id: 'clip-2', name: 'Recording 2', start: 10, duration: 25 }]
     }
   ],
-  selectedTracks: [],
+  selectedTracks: ['track-1'],
   focusedTrack: 'track-1', // Always start with focus on first track
-  selectionAnchor: null,
+  selectionAnchor: 'track-1', // Set anchor for shift-selection
   placementStrategy: 'focus-based'
 };
 
